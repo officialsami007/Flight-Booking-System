@@ -21,15 +21,15 @@ public class BookingService {
 
     private final Map<Integer, Queue<Passenger>> waitingLists = new HashMap<>();
 
-    public List<Flight> searchFlights(LocalDate startDate, LocalDate endDate) {
-        return flightRepository.findByDepartureDateBetween(startDate, endDate);
+    public LinkedList<Flight> searchFlights(LocalDate startDate, LocalDate endDate) {
+        return new LinkedList<>(flightRepository.findByDepartureDateBetween(startDate, endDate));
     }
 
     public String bookTicket(Passenger passenger) {
         Optional<Flight> flightOpt = flightRepository.findById(passenger.getFlightNumber());
         if (flightOpt.isEmpty()) return "Flight not found!";
 
-        List<Passenger> existingPassengers = passengerRepository.findByFlightNumber(passenger.getFlightNumber());
+        LinkedList<Passenger> existingPassengers = new LinkedList<>(passengerRepository.findByFlightNumber(passenger.getFlightNumber()));
         boolean isDuplicate = existingPassengers.stream()
                 .anyMatch(p -> p.getPassportNumber().equals(passenger.getPassportNumber()));
 
@@ -94,8 +94,8 @@ public class BookingService {
         return passengerRepository.findByPassportNumber(passportNumber).orElse(null);
     }
 
-    public List<Passenger> getConfirmedTickets(int flightNumber) {
-        return passengerRepository.findByFlightNumber(flightNumber);
+    public LinkedList<Passenger> getConfirmedTickets(int flightNumber) {
+        return new LinkedList<>(passengerRepository.findByFlightNumber(flightNumber));
     }
 
     public String editPassenger(String passportNumber, Passenger updatedPassenger) {
@@ -115,8 +115,8 @@ public class BookingService {
         return "Ticket Status: " + passengerOpt.get().getStatus();
     }
 
-    public List<Passenger> getMyTickets(String username) {
-        List<Passenger> passengers = passengerRepository.findByUsername(username);
+    public LinkedList<Passenger> getMyTickets(String username) {
+        LinkedList<Passenger> passengers = new LinkedList<>(passengerRepository.findByUsername(username));
         System.out.println("Fetched passengers for username: " + username + " -> " + passengers);
         return passengers;
     }

@@ -4,8 +4,9 @@ import com.example.Flight_Booking_System_4.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -20,9 +21,9 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Queue<? extends GrantedAuthority> getAuthorities() {
         // Return empty authorities for simplicity; add roles/permissions here if needed
-        return Collections.emptyList();
+        return new LinkedList<>(Collections.emptyList());
     }
 
     @Override

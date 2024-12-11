@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
-import java.util.List;
+import java.util.LinkedList;
 
 @Controller
 public class MyTicketsController {
@@ -27,7 +27,7 @@ public class MyTicketsController {
         String username = authentication.getName();
 
         // Fetch tickets for the user
-        List<Passenger> tickets = passengerService.getTicketsByUsername(username);
+        LinkedList<Passenger> tickets = new LinkedList<>(passengerService.getTicketsByUsername(username));
 
         // Add tickets to the model
         model.addAttribute("tickets", tickets);
