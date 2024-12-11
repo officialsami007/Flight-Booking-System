@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Ticket</title>
+</head>
+<body>
+<h1>Edit Ticket Information</h1>
+
+<div style="background-color: #f8f9fa; padding: 10px;">
+    <a href="/myTickets" style="margin-right: 20px; text-decoration: none; color: #007bff;">My Tickets</a>
+    <a href="/booking.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Book Tickets</a>
+    <a href="/editTicket.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Edit Ticket</a>
+    <a href="/viewTicketStatus.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">View Ticket Status</a>
+    <a href="/logout" style="text-decoration: none; color: #dc3545;">Logout</a>
+</div>
+
+<hr>
+<form id="editPassengerForm">
+    <label>Current Passport Number:</label>
+    <input type="text" id="currentPassportNumber" required><br>
+    <label>New Name:</label>
+    <input type="text" id="newPassengerName" required><br>
+    <label>New Passport Number:</label>
+    <input type="text" id="newPassportNumber" required><br>
+    <button type="button" onclick="editPassenger()">Edit Information</button>
+</form>
+
+<div id="editResponse"></div>
+
+<script>
+    async function editPassenger() {
+        const currentPassportNumber = document.getElementById('currentPassportNumber').value;
+        const newPassengerName = document.getElementById('newPassengerName').value;
+        const newPassportNumber = document.getElementById('newPassportNumber').value;
+
+        const response = await fetch(`/api/bookings/edit/${currentPassportNumber}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: newPassengerName,
+                passportNumber: newPassportNumber
+            })
+        });
+
+        const message = await response.text();
+        document.getElementById('editResponse').innerText = message;
+    }
+</script>
+</body>
+</html>

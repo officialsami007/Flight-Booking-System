@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Tickets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        header a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            margin: 20px;
+        }
+        #ticketList {
+            margin: 20px;
+        }
+        .ticket {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .ticket p {
+            margin: 5px 0;
+        }
+        .empty-message {
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2>Flight Booking System</h2>
+    <nav>
+        <a href="/myTickets">My Tickets</a>
+        <a href="/booking.html">Book Tickets</a>
+        <a href="/editTicket.html">Edit Ticket</a>
+        <a href="/viewTicketStatus.html">View Ticket Status</a>
+        <a href="/logout" style="color: red;">Logout</a>
+    </nav>
+</header>
+
+<main>
+    <h1>My Tickets</h1>
+
+    <div id="ticketList">
+        <h2>Your Booked Tickets</h2>
+        <div id="tickets"></div>
+    </div>
+</main>
+
+<script>
+    async function loadTickets() {
+        const response = await fetch('/api/bookings/myTickets');
+        const tickets = await response.json();
+        console.log("Fetched tickets:", tickets); // Debug
+
+        const ticketContainer = document.getElementById('tickets');
+        ticketContainer.innerHTML = '';
+
+        if (tickets.length === 0) {
+            ticketContainer.innerText = 'No tickets booked.';
+            return;
+        }
+
+        tickets.forEach(ticket => {
+            const ticketDiv = document.createElement('div');
+            ticketDiv.style.border = '1px solid #ccc';
+            ticketDiv.style.padding = '10px';
+            ticketDiv.style.margin = '10px 0';
+
+            ticketDiv.innerHTML = `
+        <p><strong>Passenger Name:</strong> ${ticket.name}</p>
+        <p><strong>Passport Number:</strong> ${ticket.passportNumber || 'N/A'}</p>
+        <p><strong>Flight Number:</strong> ${ticket.flightNumber}</p>
+        <p><strong>Status:</strong> ${ticket.status}</p>
+    `;
+            ticketContainer.appendChild(ticketDiv);
+        });
+    }
+    loadTickets();
+</script>
+
+</body>
+</html>

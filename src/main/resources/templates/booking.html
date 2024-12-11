@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flight Booking</title>
+</head>
+<body>
+<h1>Flight Booking System</h1>
+
+<div style="background-color: #f8f9fa; padding: 10px;">
+  <a href="/myTickets" style="margin-right: 20px; text-decoration: none; color: #007bff;">My Tickets</a>
+  <a href="/booking.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Book Tickets</a>
+  <a href="/editTicket.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Edit Ticket</a>
+  <a href="/viewTicketStatus.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">View Ticket Status</a>
+  <a href="/logout" style="text-decoration: none; color: #dc3545;">Logout</a>
+</div>
+
+
+<hr>
+
+<!-- Search Flights Section -->
+<h3>Search Flights</h3>
+<form id="searchFlightsForm">
+  <label>Start Date:</label>
+  <input type="date" id="startDate" required><br>
+  <label>End Date:</label>
+  <input type="date" id="endDate" required><br>
+  <button type="button" onclick="searchFlights()">Search Flights</button>
+</form>
+
+<div id="searchResults"></div>
+
+<hr>
+
+<!-- Book Ticket Section -->
+<h3>Book a Ticket</h3>
+<form id="bookTicketForm">
+  <label>Passenger Name:</label>
+  <input type="text" id="passengerName" required><br>
+  <label>Passport Number:</label>
+  <input type="text" id="passportNumber" required><br>
+  <label>Flight Number:</label>
+  <input type="number" id="flightNumber" required><br>
+  <button type="button" onclick="bookTicket()">Book Ticket</button>
+</form>
+
+<div id="bookingResponse"></div>
+
+<script>
+  // Search Flights Function
+  async function searchFlights() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const searchResults = document.getElementById('searchResults');
+
+    searchResults.innerHTML = "Searching for flights...";
+
+    try {
+      const response = await fetch(`/api/bookings/searchFlights?startDate=${startDate}&endDate=${endDate}`);
+      if (!response.ok) {
+        searchResults.innerHTML = "Error fetching flights. Please try again.";
+        return;
+      }
+
+      const flights = await response.json();
+      if (flights.length === 0) {
+        searchResults.innerHTML = "No flights found for the given dates.";
+      } else {
+        searchResults.innerHTML = flights
+                .map(f => `Flight ${f.flightNumber}: Departure Date - ${f.departureDate}, Seats Available - ${f.totalSeats - f.bookedSeats}`)
+                .join('<br>');
+      }
+    } catch (error) {
+      searchResults.innerHTML = `An error occurred: ${error.message}`;
+    }
+  }
+
+  // Book Ticket Function
+
+  async function bookTicket() {
+    const passengerName = document.getElementById('passengerName').value;
+    const passportNumber = document.getElementById('passportNumber').value;
+    const flightNumber = document.getElementById('flightNumber').value;
+
+    const response = await fetch('/api/bookings/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: passengerName,
+        passportNumber: passportNumber,
+        flightNumber: flightNumber
+      })
+    });
+
+    const message = await response.text();
+    document.getElementById('bookingResponse').innerText = message;
+  }
+</script>
+
+<h3>Cancel a Ticket</h3>
+<form id="cancelTicketForm">
+  <label>Passport Number:</label>
+  <input type="text" id="cancelPassportNumber" required><br>
+  <label>Flight Number:</label>
+  <input type="number" id="cancelFlightNumber" required><br>
+  <button type="button" onclick="cancelTicket()">Cancel Ticket</button>
+</form>
+
+<div id="cancelResponse"></div>
+
+<script>
+  async function cancelTicket() {
+    const passportNumber = document.getElementById('cancelPassportNumber').value;
+    const flightNumber = document.getElementById('cancelFlightNumber').value;
+
+    const response = await fetch(`/api/bookings/cancel?passportNumber=${passportNumber}&flightNumber=${flightNumber}`, {
+      method: 'DELETE'
+    });
+
+    const message = await response.text();
+    document.getElementById('cancelResponse').innerText = message;
+  }
+</script>
+
+
+
+</body>
+</html>
