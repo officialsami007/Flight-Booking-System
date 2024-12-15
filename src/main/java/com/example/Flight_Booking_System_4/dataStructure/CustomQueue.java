@@ -1,8 +1,9 @@
 package com.example.Flight_Booking_System_4.dataStructure;
 
-public class Queue<T> {
+public class CustomQueue<T> {
     private Node<T> front;
     private Node<T> rear;
+    private int size;
 
     private static class Node<T> {
         T data;
@@ -10,7 +11,6 @@ public class Queue<T> {
 
         Node(T data) {
             this.data = data;
-            this.next = null;
         }
     }
 
@@ -22,6 +22,7 @@ public class Queue<T> {
             rear.next = newNode;
             rear = newNode;
         }
+        size++;
     }
 
     public T dequeue() {
@@ -33,10 +34,15 @@ public class Queue<T> {
         if (front == null) {
             rear = null;
         }
+        size--;
         return data;
     }
 
     public boolean isEmpty() {
-        return front == null;
+        return size == 0;
+    }
+
+    public int size() {
+        return size;
     }
 }

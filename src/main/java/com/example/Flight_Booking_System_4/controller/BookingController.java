@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -23,22 +23,16 @@ public class BookingController {
 
     // Search flights by date range
     @GetMapping("/searchFlights")
-    public LinkedList<Flight> searchFlights(@RequestParam String startDate, @RequestParam String endDate) {
+    public List<Flight> searchFlights(@RequestParam String startDate, @RequestParam String endDate) {
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
-        LinkedList<Flight> flights = new LinkedList<>(bookingService.searchFlights(start, end));
-        if (flights.isEmpty()) {
-            System.out.println("No flights found for the given date range.");
-        }
-        return flights;
+        return bookingService.searchFlights(start, end).toList(); // Convert to List
     }
 
     // Book a ticket for the logged-in user
     @PostMapping("/book")
     public String bookTicket(@RequestBody Passenger passenger, Principal principal) {
-        // Fetch the logged-in user's username
-        String username = principal.getName();
-        // Set the username to the Passenger object
+        String username = principal.getName(); // Fetch the logged-in user's username
         passenger.setUsername(username);
         return bookingService.bookTicket(passenger);
     }
@@ -51,11 +45,9 @@ public class BookingController {
 
     // Get the ticket of the logged-in user
     @GetMapping("/myTickets")
-    public LinkedList<Passenger> getMyTickets(Principal principal) {
+    public List<Passenger> getMyTickets(Principal principal) {
         String username = principal.getName();
-        LinkedList<Passenger> tickets = new LinkedList<>(passengerRepository.findByUsername(username));
-        tickets.forEach(ticket -> System.out.println("Ticket: " + ticket.getPassportNumber())); // Debugging line
-        return tickets;
+        return bookingService.getMyTickets(username).toList(); // Convert to List
     }
 
     // View ticket status by passport number
@@ -66,20 +58,20 @@ public class BookingController {
 
     // Get confirmed passengers for a specific flight
     @GetMapping("/confirmed/{flightNumber}")
-    public LinkedList<Passenger> getConfirmedTickets(@PathVariable int flightNumber) {
-        return new LinkedList<>(bookingService.getConfirmedTickets(flightNumber));
+    public List<Passenger> getConfirmedTickets(@PathVariable int flightNumber) {
+        return bookingService.getConfirmedTickets(flightNumber).toList(); // Convert to List
     }
 
     // Get all confirmed passengers
     @GetMapping("/status/confirmed")
-    public LinkedList<Passenger> getConfirmedPassengers() {
-        return new LinkedList<>(passengerRepository.findByStatus("Confirmed"));
+    public List<Passenger> getConfirmedPassengers() {
+        return bookingService.getConfirmedPassengers().toList(); // Convert to List
     }
 
     // Get all waiting passengers
     @GetMapping("/status/waiting")
-    public LinkedList<Passenger> getWaitingPassengers() {
-        return new LinkedList<>(passengerRepository.findByStatus("Waiting"));
+    public List<Passenger> getWaitingPassengers() {
+        return bookingService.getWaitingPassengers().toList(); // Convert to List
     }
 
     // Edit passenger information by passport number

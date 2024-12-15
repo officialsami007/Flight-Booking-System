@@ -73,7 +73,6 @@
     async function loadTickets() {
         const response = await fetch('/api/bookings/myTickets');
         const tickets = await response.json();
-        console.log("Fetched tickets:", tickets); // Debug
 
         const ticketContainer = document.getElementById('tickets');
         ticketContainer.innerHTML = '';
@@ -85,20 +84,19 @@
 
         tickets.forEach(ticket => {
             const ticketDiv = document.createElement('div');
-            ticketDiv.style.border = '1px solid #ccc';
-            ticketDiv.style.padding = '10px';
-            ticketDiv.style.margin = '10px 0';
-
+            ticketDiv.className = 'ticket';
             ticketDiv.innerHTML = `
-        <p><strong>Passenger Name:</strong> ${ticket.name}</p>
-        <p><strong>Passport Number:</strong> ${ticket.passportNumber || 'N/A'}</p>
-        <p><strong>Flight Number:</strong> ${ticket.flightNumber}</p>
-        <p><strong>Status:</strong> ${ticket.status}</p>
-    `;
+            <p><strong>Passenger Name:</strong> ${ticket.name}</p>
+            <p><strong>Passport Number:</strong> ${ticket.passportNumber}</p>
+            <p><strong>Flight Number:</strong> ${ticket.flightNumber}</p>
+            <p><strong>Status:</strong> ${ticket.status}</p>
+        `;
             ticketContainer.appendChild(ticketDiv);
         });
     }
+
     loadTickets();
+
 </script>
 
 </body>
