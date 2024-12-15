@@ -18,10 +18,10 @@ public class RegistrationController {
     public String registerUser(@ModelAttribute User user, Model model) {
         if (userService.findByUsername(user.getUsername()) != null) {
             model.addAttribute("errorMessage", "Username already exists!");
-            return "register"; // Stay on the register page if an error occurs
+            return "register";
         }
         userService.registerUser(user);
-        return "redirect:/login?success"; // Redirect to login on successful registration
+        return "redirect:/login?success";
     }
 
     @GetMapping
@@ -29,6 +29,6 @@ public class RegistrationController {
         if (error != null) {
             model.addAttribute("errorMessage", "Username already exists! Please choose a different username.");
         }
-        return "register"; // Serve the register.html page
+        return "register";
     }
 }

@@ -87,4 +87,16 @@ public class CustomLinkedList<T> implements Iterable<T> {
             }
         };
     }
+
+    public void set(int index, T data) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        Node<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        current.data = data;
+    }
+
 }

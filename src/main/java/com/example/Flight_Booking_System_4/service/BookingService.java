@@ -26,8 +26,25 @@ public class BookingService {
 
     public CustomLinkedList<Flight> searchFlights(LocalDate startDate, LocalDate endDate) {
         CustomLinkedList<Flight> flights = new CustomLinkedList<>();
-        flights.addAll(flightRepository.findByDepartureDateBetween(startDate, endDate)); // Works with Iterable
+        flights.addAll(flightRepository.findByDepartureDateBetween(startDate, endDate));
+        bubbleSortFlightsByDate(flights);
         return flights;
+    }
+
+    private void bubbleSortFlightsByDate(CustomLinkedList<Flight> flights) {
+        int n = flights.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                Flight flight1 = flights.get(j);
+                Flight flight2 = flights.get(j + 1);
+
+                if (flight1.getDepartureDate().isAfter(flight2.getDepartureDate())) {
+                    // Swap the flights
+                    flights.set(j, flight2);
+                    flights.set(j + 1, flight1);
+                }
+            }
+        }
     }
 
     public String bookTicket(Passenger passenger) {

@@ -1,49 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Edit Ticket</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        #editResponse {
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        #editResponse.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        #editResponse.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
 <body>
-<h1>Edit Ticket Information</h1>
-
-<div style="background-color: #f8f9fa; padding: 10px;">
-    <a href="/myTickets" style="margin-right: 20px; text-decoration: none; color: #007bff;">My Tickets</a>
-    <a href="/booking.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Book Tickets</a>
-    <a href="/editTicket.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Edit Ticket</a>
-    <a href="/viewTicketStatus.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">View Ticket Status</a>
-    <a href="/logout" style="text-decoration: none; color: #dc3545;">Logout</a>
+<div class="navbar">
+    <a href="/myTickets">My Tickets</a>
+    <a href="/booking.html">Book Tickets</a>
+    <a href="/editTicket.html">Edit Ticket</a>
+    <a href="/viewTicketStatus.html">View Ticket Status</a>
+    <a href="/logout" class="logout">Logout</a>
 </div>
 
-<hr>
-<form id="editPassengerForm">
-    <label>Current Passport Number:</label>
-    <input type="text" id="currentPassportNumber" required><br>
-    <label>New Name:</label>
-    <input type="text" id="newPassengerName" required><br>
-    <label>New Passport Number:</label>
-    <input type="text" id="newPassportNumber" required><br>
-    <button type="button" onclick="editPassenger()">Edit Information</button>
-</form>
+<h1>Edit Ticket Information</h1>
 
-<div id="editResponse"></div>
+<div class="container">
+    <div class="card">
+        <form id="editPassengerForm">
+            <label>Current Passport Number:</label>
+            <input type="text" id="currentPassportNumber" required>
+            <label>New Name:</label>
+            <input type="text" id="newPassengerName" required>
+            <label>New Passport Number:</label>
+            <input type="text" id="newPassportNumber" required>
+            <button type="button" onclick="editPassenger()">Edit Information</button>
+        </form>
+        <div id="editResponse"></div>
+    </div>
+</div>
 
 <script>
     async function editPassenger() {
         const currentPassportNumber = document.getElementById('currentPassportNumber').value;
         const newPassengerName = document.getElementById('newPassengerName').value;
         const newPassportNumber = document.getElementById('newPassportNumber').value;
+        const editResponse = document.getElementById('editResponse');
 
-        const response = await fetch(`/api/bookings/edit/${currentPassportNumber}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: newPassengerName,
-                passportNumber: newPassportNumber
-            })
-        });
+        try {
+            const response = await fetch(`/api/bookings/edit/${currentPassportNumber}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: newPassengerName,
+                    passportNumber: newPassportNumber
+                })
+            });
 
-        const message = await response.text();
-        document.getElementById('editResponse').innerText = message;
+            const result = await response.text();
+            editResponse.className = 'success';
+            editResponse.innerText = result;
+
+            if (!response.ok) {
+                editResponse.className = 'error';
+                editResponse.innerText = result;
+            }
+        } catch (error) {
+            editResponse.className = 'error';
+            editResponse.innerText = "An error occurred while updating the ticket. Please try again.";
+        }
+
+        editResponse.style.display = 'block';
+        setTimeout(() => editResponse.style.display = 'none', 4000);
     }
 </script>
 </body>

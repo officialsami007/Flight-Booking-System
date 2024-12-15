@@ -8,7 +8,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String homePage() {
-        return "booking"; // Ensure booking.html exists in src/main/resources/templates
+        return "booking";
     }
 
     @GetMapping("/booking.html")

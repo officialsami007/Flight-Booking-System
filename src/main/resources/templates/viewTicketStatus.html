@@ -1,121 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>View Ticket Status</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <style>
-        .section {
-            margin-bottom: 20px;
+        .ticket-section {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .navbar {
-            background-color: #f8f9fa;
-            padding: 10px;
-        }
-        .navbar a {
-            margin-right: 20px;
-            text-decoration: none;
+
+        .ticket-section h3 {
             color: #007bff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .ticket-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            background-color: #e7f1ff;
+            border-radius: 5px;
+            border: 1px solid #d0e2ff;
+            color: #333;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-tickets {
+            text-align: center;
+            color: #666;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
+<div class="navbar">
+    <a href="/myTickets">My Tickets</a>
+    <a href="/booking.html">Book Tickets</a>
+    <a href="/editTicket.html">Edit Ticket</a>
+    <a href="/viewTicketStatus.html">View Ticket Status</a>
+    <a href="/logout" class="logout">Logout</a>
+</div>
+
 <h1>View Ticket Status</h1>
 
-<!-- Navigation Bar -->
-<div style="background-color: #f8f9fa; padding: 10px;">
-    <a href="/myTickets" style="margin-right: 20px; text-decoration: none; color: #007bff;">My Tickets</a>
-    <a href="/booking.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Book Tickets</a>
-    <a href="/editTicket.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Edit Ticket</a>
-    <a href="/viewTicketStatus.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">View Ticket Status</a>
-    <a href="/logout" style="text-decoration: none; color: #dc3545;">Logout</a>
-</div>
-
-<hr>
-
-<!-- Search by Passport Number -->
-<form id="viewStatusForm">
-    <label>Passport Number:</label>
-    <input type="text" id="statusPassportNumber" required><br>
-    <button type="button" onclick="viewTicketStatus()">View Status by Passport Number</button>
-</form>
-<div id="statusResponse" style="margin-top: 10px;"></div>
-
-<hr>
-
-<!-- Section for Confirmed Tickets -->
-<div class="section">
-    <div class="title">Confirmed Tickets</div>
-    <div id="confirmedTickets">
-        <!-- Confirmed tickets will be displayed here -->
+<div class="container">
+    <div class="card" style="max-width: 800px; margin: auto;">
+        <h3>Search by Passport Number</h3>
+        <form id="viewStatusForm">
+            <label>Passport Number:</label>
+            <input type="text" id="statusPassportNumber" required>
+            <button type="button" onclick="viewTicketStatus()">View Status</button>
+        </form>
+        <div id="statusResponse" class="no-tickets"></div>
     </div>
-</div>
 
-<!-- Section for Waiting List Tickets -->
-<div class="section">
-    <div class="title">Waiting List Tickets</div>
-    <div id="waitingTickets">
-        <!-- Waiting list tickets will be displayed here -->
+    <div class="ticket-section">
+        <h3>Confirmed Tickets</h3>
+        <div id="confirmedTickets" class="ticket-list"></div>
+    </div>
+
+    <div class="ticket-section">
+        <h3>Waiting List Tickets</h3>
+        <div id="waitingTickets" class="ticket-list"></div>
     </div>
 </div>
 
 <script>
-    // Fetch Confirmed Tickets
     async function fetchConfirmedTickets() {
-        try {
-            const response = await fetch('/api/bookings/status/confirmed');
-            const passengers = await response.json();
-            const confirmedSection = document.getElementById('confirmedTickets');
+        const response = await fetch('/api/bookings/status/confirmed');
+        const passengers = await response.json();
+        const confirmedSection = document.getElementById('confirmedTickets');
 
-            if (passengers.length === 0) {
-                confirmedSection.innerHTML = "No confirmed tickets found.";
-            } else {
-                confirmedSection.innerHTML = passengers
-                    .map(p => `<div>${p.name} (Flight: ${p.flightNumber})</div>`)
-                    .join('');
-            }
-        } catch (error) {
-            document.getElementById('confirmedTickets').innerText = "Error fetching confirmed tickets.";
-        }
+        confirmedSection.innerHTML = passengers.length ? passengers.map(p => `
+            <div class="ticket-item">
+                <span>${p.name} (Flight: ${p.flightNumber})</span>
+                <span>Status: Confirmed</span>
+            </div>
+        `).join('') : "<div class='no-tickets'>No confirmed tickets found.</div>";
     }
 
-    // Fetch Waiting List Tickets
     async function fetchWaitingTickets() {
-        try {
-            const response = await fetch('/api/bookings/status/waiting');
-            const passengers = await response.json();
-            const waitingSection = document.getElementById('waitingTickets');
+        const response = await fetch('/api/bookings/status/waiting');
+        const passengers = await response.json();
+        const waitingSection = document.getElementById('waitingTickets');
 
-            if (passengers.length === 0) {
-                waitingSection.innerHTML = "No waiting list tickets found.";
-            } else {
-                waitingSection.innerHTML = passengers
-                    .map(p => `<div>${p.name} (Flight: ${p.flightNumber})</div>`)
-                    .join('');
-            }
-        } catch (error) {
-            document.getElementById('waitingTickets').innerText = "Error fetching waiting list tickets.";
-        }
+        waitingSection.innerHTML = passengers.length ? passengers.map(p => `
+            <div class="ticket-item">
+                <span>${p.name} (Flight: ${p.flightNumber})</span>
+                <span>Status: Waiting</span>
+            </div>
+        `).join('') : "<div class='no-tickets'>No waiting list tickets found.</div>";
     }
 
-    // Search Ticket by Passport Number
     async function viewTicketStatus() {
         const passportNumber = document.getElementById('statusPassportNumber').value;
         const statusResponse = document.getElementById('statusResponse');
 
         try {
             const response = await fetch(`/api/bookings/status/${passportNumber}`);
-            const message = await response.text();
-            statusResponse.innerText = message;
+            const result = await response.text();
+            statusResponse.className = 'ticket-item';
+            statusResponse.innerText = result;
         } catch (error) {
-            statusResponse.innerText = "Error fetching ticket status for the given passport number.";
+            statusResponse.className = 'no-tickets';
+            statusResponse.innerText = "Error fetching ticket status.";
         }
     }
 
-    // Fetch Data on Page Load
     window.onload = function () {
         fetchConfirmedTickets();
         fetchWaitingTickets();

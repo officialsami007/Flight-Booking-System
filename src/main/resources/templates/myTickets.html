@@ -1,103 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>My Tickets</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        header a {
-            color: white;
-            text-decoration: none;
-            margin-right: 20px;
-        }
-        header a:hover {
-            text-decoration: underline;
-        }
-        h1 {
-            margin: 20px;
-        }
-        #ticketList {
-            margin: 20px;
-        }
-        .ticket {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: white;
-            padding: 15px;
-            margin: 10px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .ticket p {
-            margin: 5px 0;
-        }
-        .empty-message {
-            color: gray;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+<div class="navbar">
+    <a href="/myTickets">My Tickets</a>
+    <a href="/booking.html">Book Tickets</a>
+    <a href="/editTicket.html">Edit Ticket</a>
+    <a href="/viewTicketStatus.html">View Ticket Status</a>
+    <a href="/logout" class="logout">Logout</a>
+</div>
 
-<header>
-    <h2>Flight Booking System</h2>
-    <nav>
-        <a href="/myTickets">My Tickets</a>
-        <a href="/booking.html">Book Tickets</a>
-        <a href="/editTicket.html">Edit Ticket</a>
-        <a href="/viewTicketStatus.html">View Ticket Status</a>
-        <a href="/logout" style="color: red;">Logout</a>
-    </nav>
-</header>
+<h1>My Tickets</h1>
 
-<main>
-    <h1>My Tickets</h1>
-
-    <div id="ticketList">
-        <h2>Your Booked Tickets</h2>
-        <div id="tickets"></div>
+<div class="container">
+    <div class="card">
+        <h3>Your Booked Tickets</h3>
+        <div id="tickets" class="ticket"></div>
     </div>
-</main>
+</div>
 
 <script>
     async function loadTickets() {
         const response = await fetch('/api/bookings/myTickets');
         const tickets = await response.json();
-
         const ticketContainer = document.getElementById('tickets');
+
         ticketContainer.innerHTML = '';
-
         if (tickets.length === 0) {
-            ticketContainer.innerText = 'No tickets booked.';
-            return;
+            ticketContainer.innerHTML = '<p class="empty-message">No tickets booked.</p>';
+        } else {
+            tickets.forEach(ticket => {
+                const ticketDiv = document.createElement('div');
+                ticketDiv.className = 'ticket';
+                ticketDiv.innerHTML = `
+                    <p><strong>Passenger Name:</strong> ${ticket.name}</p>
+                    <p><strong>Passport Number:</strong> ${ticket.passportNumber}</p>
+                    <p><strong>Flight Number:</strong> ${ticket.flightNumber}</p>
+                    <p><strong>Status:</strong> ${ticket.status}</p>
+                `;
+                ticketContainer.appendChild(ticketDiv);
+            });
         }
-
-        tickets.forEach(ticket => {
-            const ticketDiv = document.createElement('div');
-            ticketDiv.className = 'ticket';
-            ticketDiv.innerHTML = `
-            <p><strong>Passenger Name:</strong> ${ticket.name}</p>
-            <p><strong>Passport Number:</strong> ${ticket.passportNumber}</p>
-            <p><strong>Flight Number:</strong> ${ticket.flightNumber}</p>
-            <p><strong>Status:</strong> ${ticket.status}</p>
-        `;
-            ticketContainer.appendChild(ticketDiv);
-        });
     }
 
     loadTickets();
-
 </script>
-
 </body>
 </html>

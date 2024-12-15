@@ -1,128 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Flight Booking</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .flight-results {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .flight-results div {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #e7f1ff;
+      border-radius: 5px;
+      border: 1px solid #d0e2ff;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .message-popup {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 10px 15px;
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 1000;
+    }
+
+    .message-popup.success {
+      background-color: #d4edda;
+      color: #155724;
+      border-color: #c3e6cb;
+    }
+
+    .message-popup.show {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-<h1>Flight Booking System</h1>
-
-<div style="background-color: #f8f9fa; padding: 10px;">
-  <a href="/myTickets" style="margin-right: 20px; text-decoration: none; color: #007bff;">My Tickets</a>
-  <a href="/booking.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Book Tickets</a>
-  <a href="/editTicket.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">Edit Ticket</a>
-  <a href="/viewTicketStatus.html" style="margin-right: 20px; text-decoration: none; color: #007bff;">View Ticket Status</a>
-  <a href="/logout" style="text-decoration: none; color: #dc3545;">Logout</a>
+<div class="navbar">
+  <a href="/myTickets">My Tickets</a>
+  <a href="/booking.html">Book Tickets</a>
+  <a href="/editTicket.html">Edit Ticket</a>
+  <a href="/viewTicketStatus.html">View Ticket Status</a>
+  <a href="/logout" class="logout">Logout</a>
 </div>
 
+<h1>Book and Manage Flights</h1>
+<div id="messagePopup" class="message-popup"></div>
 
-<hr>
+<div class="container">
+  <div class="card">
+    <h3>Search Flights</h3>
+    <form id="searchFlightsForm">
+      <label>Start Date:</label>
+      <input type="date" id="startDate" required>
+      <label>End Date:</label>
+      <input type="date" id="endDate" required>
+      <button type="button" onclick="searchFlights()">Search Flights</button>
+    </form>
+    <div id="searchResults" class="flight-results"></div>
+  </div>
 
-<!-- Search Flights Section -->
-<h3>Search Flights</h3>
-<form id="searchFlightsForm">
-  <label>Start Date:</label>
-  <input type="date" id="startDate" required><br>
-  <label>End Date:</label>
-  <input type="date" id="endDate" required><br>
-  <button type="button" onclick="searchFlights()">Search Flights</button>
-</form>
+  <div class="card">
+    <h3>Book a Ticket</h3>
+    <form id="bookTicketForm">
+      <label>Passenger Name:</label>
+      <input type="text" id="passengerName" required>
+      <label>Passport Number:</label>
+      <input type="text" id="passportNumber" required>
+      <label>Flight Number:</label>
+      <input type="number" id="flightNumber" required>
+      <button type="button" onclick="bookTicket()">Book Ticket</button>
+    </form>
+  </div>
 
-<div id="searchResults"></div>
-
-<hr>
-
-<!-- Book Ticket Section -->
-<h3>Book a Ticket</h3>
-<form id="bookTicketForm">
-  <label>Passenger Name:</label>
-  <input type="text" id="passengerName" required><br>
-  <label>Passport Number:</label>
-  <input type="text" id="passportNumber" required><br>
-  <label>Flight Number:</label>
-  <input type="number" id="flightNumber" required><br>
-  <button type="button" onclick="bookTicket()">Book Ticket</button>
-</form>
-
-<div id="bookingResponse"></div>
+  <div class="card">
+    <h3>Cancel a Ticket</h3>
+    <form id="cancelTicketForm">
+      <label>Passport Number:</label>
+      <input type="text" id="cancelPassportNumber" required>
+      <label>Flight Number:</label>
+      <input type="number" id="cancelFlightNumber" required>
+      <button type="button" onclick="cancelTicket()">Cancel Ticket</button>
+    </form>
+  </div>
+</div>
 
 <script>
-  // Search Flights Function
   async function searchFlights() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
     const searchResults = document.getElementById('searchResults');
 
-    searchResults.innerHTML = "Searching for flights...";
+    searchResults.innerHTML = "<div>Searching for flights...</div>";
 
     try {
       const response = await fetch(`/api/bookings/searchFlights?startDate=${startDate}&endDate=${endDate}`);
-      if (!response.ok) {
-        searchResults.innerHTML = "Error fetching flights. Please try again.";
-        return;
-      }
-
       const flights = await response.json();
-      if (flights.length === 0) {
-        searchResults.innerHTML = "No flights found for the given dates.";
+
+      if (flights.length) {
+        searchResults.innerHTML = flights.map(f => `
+                    <div>
+                        <span>Flight ${f.flightNumber}: ${f.departureDate}</span>
+                        <span>Seats Available: ${f.totalSeats - f.bookedSeats}</span>
+                    </div>
+                `).join('');
       } else {
-        searchResults.innerHTML = flights
-                .map(f => `Flight ${f.flightNumber}: Departure Date - ${f.departureDate}, Seats Available - ${f.totalSeats - f.bookedSeats}`)
-                .join('<br>');
+        searchResults.innerHTML = "<div>No flights found for the selected dates.</div>";
       }
     } catch (error) {
-      searchResults.innerHTML = `An error occurred: ${error.message}`;
+      showMessage("Error fetching flights. Please try again later.", "error");
     }
   }
-
-
-  // Book Ticket Function
 
   async function bookTicket() {
     const passengerName = document.getElementById('passengerName').value;
     const passportNumber = document.getElementById('passportNumber').value;
     const flightNumber = document.getElementById('flightNumber').value;
 
-    const response = await fetch('/api/bookings/book', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: passengerName,
-        passportNumber: passportNumber,
-        flightNumber: flightNumber
-      })
-    });
+    try {
+      const response = await fetch('/api/bookings/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: passengerName, passportNumber, flightNumber })
+      });
 
-    const message = await response.text();
-    document.getElementById('bookingResponse').innerText = message;
+      const result = await response.text();
+
+      if (response.ok) {
+        showMessage(result, "success");
+      } else {
+        showMessage(result, "error");
+      }
+    } catch (error) {
+      showMessage("Failed to book the ticket. Please try again.", "error");
+    }
   }
-</script>
 
-<h3>Cancel a Ticket</h3>
-<form id="cancelTicketForm">
-  <label>Passport Number:</label>
-  <input type="text" id="cancelPassportNumber" required><br>
-  <label>Flight Number:</label>
-  <input type="number" id="cancelFlightNumber" required><br>
-  <button type="button" onclick="cancelTicket()">Cancel Ticket</button>
-</form>
-
-<div id="cancelResponse"></div>
-
-<script>
   async function cancelTicket() {
     const passportNumber = document.getElementById('cancelPassportNumber').value;
     const flightNumber = document.getElementById('cancelFlightNumber').value;
 
-    const response = await fetch(`/api/bookings/cancel?passportNumber=${passportNumber}&flightNumber=${flightNumber}`, {
-      method: 'DELETE'
-    });
+    try {
+      const response = await fetch(`/api/bookings/cancel?passportNumber=${passportNumber}&flightNumber=${flightNumber}`, {
+        method: 'DELETE'
+      });
 
-    const message = await response.text();
-    document.getElementById('cancelResponse').innerText = message;
+      const result = await response.text();
+
+      if (response.ok) {
+        showMessage(result, "success");
+      } else {
+        showMessage(result, "error");
+      }
+    } catch (error) {
+      showMessage("Failed to cancel the ticket. Please try again.", "error");
+    }
+  }
+
+  function showMessage(message, type) {
+    const popup = document.getElementById('messagePopup');
+    popup.innerText = message;
+    popup.className = `message-popup ${type} show`;
+
+    setTimeout(() => {
+      popup.classList.remove('show');
+    }, 3000);
   }
 </script>
-
-
-
 </body>
 </html>

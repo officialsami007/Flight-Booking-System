@@ -14,7 +14,6 @@ public class UserService {
     }
 
     public void registerUser(User user) {
-        // Directly save the user object
         userRepository.save(user);
     }
 
