@@ -15,7 +15,7 @@ public class PassengerService {
     public CustomLinkedList<Passenger> getTicketsByUsername(String username) {
         CustomLinkedList<Passenger> passengers = new CustomLinkedList<>();
         passengers.addAll(passengerRepository.findByUsername(username));
-        bubbleSortPassengersByName(passengers); // Sort passengers by name
+        bubbleSortPassengersByName(passengers);
         return passengers;
     }
 

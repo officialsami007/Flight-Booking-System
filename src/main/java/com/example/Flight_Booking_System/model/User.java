@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users") // Avoids conflict with the reserved "user" keyword
+@Table(name = "users")
 public class User {
 
     @Id

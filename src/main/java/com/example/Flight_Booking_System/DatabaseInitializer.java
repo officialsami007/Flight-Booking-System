@@ -29,7 +29,7 @@ public class DatabaseInitializer {
             // Initialize a sample user
             User adminUser = new User();
             adminUser.setUsername("admin");
-            adminUser.setPassword("admin123"); // Storing raw password
+            adminUser.setPassword("admin123");
             adminUser.setEmail("admin@example.com");
             userRepository.save(adminUser);
             System.out.println("Admin user initialized.");
