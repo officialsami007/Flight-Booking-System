@@ -1,8 +1,8 @@
-package com.example.Flight_Booking_System_4.service;
+package com.example.Flight_Booking_System.service;
 
-import com.example.Flight_Booking_System_4.model.Passenger;
-import com.example.Flight_Booking_System_4.repository.PassengerRepository;
-import com.example.Flight_Booking_System_4.dataStructure.CustomLinkedList;
+import com.example.Flight_Booking_System.model.Passenger;
+import com.example.Flight_Booking_System.repository.PassengerRepository;
+import com.example.Flight_Booking_System.dataStructure.CustomLinkedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

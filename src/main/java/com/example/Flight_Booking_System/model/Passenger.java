@@ -1,4 +1,4 @@
-package com.example.Flight_Booking_System_4.model;
+package com.example.Flight_Booking_System.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

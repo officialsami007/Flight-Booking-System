@@ -1,8 +1,8 @@
-package com.example.Flight_Booking_System_4.controller;
+package com.example.Flight_Booking_System.controller;
 
-import com.example.Flight_Booking_System_4.model.Passenger;
-import com.example.Flight_Booking_System_4.service.PassengerService;
-import com.example.Flight_Booking_System_4.dataStructure.CustomLinkedList;
+import com.example.Flight_Booking_System.model.Passenger;
+import com.example.Flight_Booking_System.service.PassengerService;
+import com.example.Flight_Booking_System.dataStructure.CustomLinkedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

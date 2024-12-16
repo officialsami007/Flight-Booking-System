@@ -1,4 +1,4 @@
-package com.example.Flight_Booking_System_4.dataStructure;
+package com.example.Flight_Booking_System.dataStructure;
 
 public class CustomQueue<T> {
     private Node<T> front;

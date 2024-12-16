@@ -1,10 +1,10 @@
-package com.example.Flight_Booking_System_4.controller;
+package com.example.Flight_Booking_System.controller;
 
-import com.example.Flight_Booking_System_4.dataStructure.CustomLinkedList;
-import com.example.Flight_Booking_System_4.model.Flight;
-import com.example.Flight_Booking_System_4.model.Passenger;
-import com.example.Flight_Booking_System_4.service.BookingService;
-import com.example.Flight_Booking_System_4.repository.PassengerRepository;
+import com.example.Flight_Booking_System.dataStructure.CustomLinkedList;
+import com.example.Flight_Booking_System.model.Flight;
+import com.example.Flight_Booking_System.model.Passenger;
+import com.example.Flight_Booking_System.service.BookingService;
+import com.example.Flight_Booking_System.repository.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

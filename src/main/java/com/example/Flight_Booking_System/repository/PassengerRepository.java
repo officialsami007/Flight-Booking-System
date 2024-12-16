@@ -1,6 +1,6 @@
-package com.example.Flight_Booking_System_4.repository;
+package com.example.Flight_Booking_System.repository;
 
-import com.example.Flight_Booking_System_4.model.Passenger;
+import com.example.Flight_Booking_System.model.Passenger;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.lang.Iterable;
 

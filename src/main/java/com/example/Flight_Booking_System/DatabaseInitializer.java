@@ -1,9 +1,9 @@
-package com.example.Flight_Booking_System_4;
+package com.example.Flight_Booking_System;
 
-import com.example.Flight_Booking_System_4.model.Flight;
-import com.example.Flight_Booking_System_4.model.User;
-import com.example.Flight_Booking_System_4.repository.FlightRepository;
-import com.example.Flight_Booking_System_4.repository.UserRepository;
+import com.example.Flight_Booking_System.model.Flight;
+import com.example.Flight_Booking_System.model.User;
+import com.example.Flight_Booking_System.repository.FlightRepository;
+import com.example.Flight_Booking_System.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;

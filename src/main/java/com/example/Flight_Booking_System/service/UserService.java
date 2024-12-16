@@ -1,7 +1,7 @@
-package com.example.Flight_Booking_System_4.service;
+package com.example.Flight_Booking_System.service;
 
-import com.example.Flight_Booking_System_4.model.User;
-import com.example.Flight_Booking_System_4.repository.UserRepository;
+import com.example.Flight_Booking_System.model.User;
+import com.example.Flight_Booking_System.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,4 +1,4 @@
-package com.example.Flight_Booking_System_4.controller;
+package com.example.Flight_Booking_System.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,7 @@
-package com.example.Flight_Booking_System_4.config;
+package com.example.Flight_Booking_System.config;
 
-import com.example.Flight_Booking_System_4.model.User;
-import com.example.Flight_Booking_System_4.service.UserService;
+import com.example.Flight_Booking_System.model.User;
+import com.example.Flight_Booking_System.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,7 +1,7 @@
-package com.example.Flight_Booking_System_4.controller;
+package com.example.Flight_Booking_System.controller;
 
-import com.example.Flight_Booking_System_4.model.User;
-import com.example.Flight_Booking_System_4.service.UserService;
+import com.example.Flight_Booking_System.model.User;
+import com.example.Flight_Booking_System.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
