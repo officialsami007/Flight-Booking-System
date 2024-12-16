@@ -17,9 +17,13 @@ public class DatabaseInitializer {
     CommandLineRunner initDatabase(FlightRepository flightRepository, UserRepository userRepository) {
         return args -> {
             // Initialize flights
-            flightRepository.save(new Flight(LocalDate.of(2024, 11, 19), 3));
-            flightRepository.save(new Flight(LocalDate.of(2024, 11, 20), 3));
-            flightRepository.save(new Flight(LocalDate.of(2024, 11, 21), 3));
+            flightRepository.save(new Flight(LocalDate.of(2024, 12, 19), 3));
+            flightRepository.save(new Flight(LocalDate.of(2024, 12, 20), 8));
+            flightRepository.save(new Flight(LocalDate.of(2024, 12, 21), 3));
+            flightRepository.save(new Flight(LocalDate.of(2025, 01, 21), 10));
+            flightRepository.save(new Flight(LocalDate.of(2025, 01, 28), 07));
+            flightRepository.save(new Flight(LocalDate.of(2025, 02, 15), 15));
+
             System.out.println("Flights initialized in the database.");
 
             // Initialize a sample user
